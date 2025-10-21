@@ -1,12 +1,11 @@
 'use client'
 import { useState } from 'react'
-import ChatWidget from '@/components/ChatWidget'
 
 export default function Home() {
   const [featuredCards] = useState([
-    { id: 1, name: 'Charizard', price: 65, image: '/charizard.jpg', condition: 'Mint' },
-    { id: 2, name: 'Pikachu', price: 25, image: '/pikachu.jpg', condition: 'Near Mint' },
-    { id: 3, name: 'Blastoise', price: 45, image: '/blastoise.jpg', condition: 'Excellent' },
+    { id: 1, name: 'Charizard', price: 65, condition: 'Mint' },
+    { id: 2, name: 'Pikachu', price: 25, condition: 'Near Mint' },
+    { id: 3, name: 'Blastoise', price: 45, condition: 'Excellent' },
   ])
 
   return (
@@ -40,7 +39,7 @@ export default function Home() {
           </p>
           <div className="bg-white rounded-lg p-6 shadow-lg max-w-2xl mx-auto">
             <p className="text-gray-700 mb-4">
-              🤖 <strong>AI Negotiator:</strong> Get fair prices instantly. Our AI checks market rates and helps buyers & sellers find the perfect deal!
+              🤖 <strong>AI Negotiator:</strong> Get fair prices instantly!
             </p>
             <button className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600">
               Start Trading Now
@@ -55,7 +54,7 @@ export default function Home() {
             {featuredCards.map(card => (
               <div key={card.id} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
                 <div className="bg-gray-200 h-48 rounded-lg mb-4 flex items-center justify-center">
-                  <span className="text-gray-500">🃏 {card.name} Image</span>
+                  <span className="text-gray-500">🃏 {card.name}</span>
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">{card.name}</h3>
                 <div className="flex justify-between items-center mb-2">
@@ -69,38 +68,7 @@ export default function Home() {
             ))}
           </div>
         </section>
-
-        {/* How It Works */}
-        <section className="bg-white rounded-lg p-8 shadow-lg">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🃏</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">List Your Cards</h3>
-              <p className="text-gray-600">Sell your Pokémon cards easily with our AI pricing assistant</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🤖</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">AI Negotiation</h3>
-              <p className="text-gray-600">Our AI helps buyers and sellers find fair market prices</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💰</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Get Paid</h3>
-              <p className="text-gray-600">Secure transactions and fast payments</p>
-            </div>
-          </div>
-        </section>
       </main>
-
-      {/* AI Chat Widget */}
-      <ChatWidget />
     </div>
   )
 }
