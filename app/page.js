@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import ChatWidget from './components/ChatWidget'
 
 export default function Home() {
   const [featuredCards] = useState([
@@ -39,7 +40,7 @@ export default function Home() {
           </p>
           <div className="bg-white rounded-lg p-6 shadow-lg max-w-2xl mx-auto">
             <p className="text-gray-700 mb-4">
-              🤖 <strong>AI Negotiator:</strong> Get fair prices instantly!
+              🤖 <strong>AI Negotiator:</strong> Get fair prices instantly! Our AI checks market rates and helps buyers & sellers find the perfect deal!
             </p>
             <button className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600">
               Start Trading Now
@@ -68,7 +69,38 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {/* How It Works */}
+        <section className="bg-white rounded-lg p-8 shadow-lg">
+          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🃏</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">List Your Cards</h3>
+              <p className="text-gray-600">Sell your Pokémon cards easily with our AI pricing assistant</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">🤖</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">AI Negotiation</h3>
+              <p className="text-gray-600">Our AI helps buyers and sellers find fair market prices</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">💰</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Get Paid</h3>
+              <p className="text-gray-600">Secure transactions and fast payments</p>
+            </div>
+          </div>
+        </section>
       </main>
+
+      {/* AI Chat Widget */}
+      <ChatWidget />
     </div>
   )
 }
