@@ -8,7 +8,8 @@ export default function ChatWidget() {
     { role: 'assistant', content: "Hi! I'm your Pokémon trading assistant! Ask me about card prices or make an offer!" }
   ])
 
-  const [position, setPosition] = useState({ chat: { x: 0, y: 0 }, button: { x: 0, y: 0 } })
+  // Use percentages for position
+  const [position, setPosition] = useState({ chat: { x: 70, y: 70 }, button: { x: 90, y: 90 } })
   const [isDragging, setIsDragging] = useState(false)
   const [isDraggingButton, setIsDraggingButton] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
@@ -17,21 +18,38 @@ export default function ChatWidget() {
   const chatRef = useRef(null)
   const buttonRef = useRef(null)
 
+  // Set initial positions as percentages
   useEffect(() => {
-    const buttonX = window.innerWidth - 100
-    const buttonY = window.innerHeight - 100
     setPosition({
-      button: { x: buttonX, y: buttonY },
-      chat: { x: buttonX - 200, y: buttonY + 100 }
+      button: { x: 90, y: 90 },
+      chat: { x: 70, y: 70 }
     })
+  }, [])
+
+  // Keep chat/button in viewport on resize/zoom
+  useEffect(() => {
+    const handleResize = () => {
+      setPosition(prev => ({
+        button: {
+          x: Math.min(prev.button.x, 95),
+          y: Math.min(prev.button.y, 95)
+        },
+        chat: {
+          x: Math.min(prev.chat.x, 80),
+          y: Math.min(prev.chat.y, 80)
+        }
+      }))
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const handleOpen = () => {
     setPosition(prev => ({
       ...prev,
       chat: { 
-        x: prev.button.x - 200,
-        y: prev.button.y + 100
+        x: Math.max(prev.button.x - 20, 0),
+        y: Math.min(prev.button.y + 10, 80)
       }
     }))
     setIsOpen(true)
@@ -52,20 +70,22 @@ export default function ChatWidget() {
 
   const handleMouseMove = (e) => {
     e.preventDefault()
+    const vw = window.innerWidth
+    const vh = window.innerHeight
     if (isDragging) {
-      const newX = e.clientX - dragOffset.x
-      const newY = e.clientY - dragOffset.y
+      const newX = ((e.clientX - dragOffset.x) / vw) * 100
+      const newY = ((e.clientY - dragOffset.y) / vh) * 100
       setPosition(prev => ({
         ...prev,
-        chat: { x: newX, y: newY }
+        chat: { x: Math.max(0, Math.min(newX, 80)), y: Math.max(0, Math.min(newY, 80)) }
       }))
     }
     if (isDraggingButton) {
-      const newX = e.clientX - dragOffset.x
-      const newY = e.clientY - dragOffset.y
+      const newX = ((e.clientX - dragOffset.x) / vw) * 100
+      const newY = ((e.clientY - dragOffset.y) / vh) * 100
       setPosition(prev => ({
         ...prev,
-        button: { x: newX, y: newY }
+        button: { x: Math.max(0, Math.min(newX, 95)), y: Math.max(0, Math.min(newY, 95)) }
       }))
     }
   }
@@ -109,8 +129,8 @@ export default function ChatWidget() {
           style={{ 
             boxShadow: '0 10px 25px rgba(239, 68, 68, 0.5)',
             cursor: isDraggingButton ? 'grabbing' : 'grab',
-            left: `${position.button.x}px`,
-            top: `${position.button.y}px`,
+            left: `${position.button.x}vw`,
+            top: `${position.button.y}vh`,
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -121,12 +141,12 @@ export default function ChatWidget() {
       {isOpen && (
         <div 
           ref={chatRef}
-          className="fixed w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col pointer-events-auto overflow-hidden"
+          className="fixed w-[24rem] h-[32rem] bg-blue-500 rounded-2xl shadow-2xl border border-black flex flex-col pointer-events-auto overflow-hidden"
           style={{ 
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
             animation: 'floatIn 0.3s ease-out',
-            left: `${position.chat.x}px`,
-            top: `${position.chat.y}px`,
+            left: `${position.chat.x}vw`,
+            top: `${position.chat.y}vh`,
             transition: isDragging ? 'none' : 'all 0.3s ease-out'
           }}
         >
@@ -136,7 +156,7 @@ export default function ChatWidget() {
             onMouseDown={(e) => handleMouseDown(e, 'chat')}
           >
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                 <span className="text-red-500 text-sm">🤖</span>
               </div>
               <div>
@@ -152,13 +172,13 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+          <div className="flex-1 p-4 overflow-y-auto bg-blue-500">
             {messages.map((msg, index) => (
               <div key={index} className={`mb-4 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                 <div className={`inline-block p-3 rounded-2xl max-w-[85%] ${
                   msg.role === 'user' 
                     ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-br-none' 
-                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none shadow-sm'
+                    : 'bg-blue-500 text-white border border-black rounded-bl-none shadow-sm'
                 }`}>
                   {msg.content}
                 </div>
@@ -167,7 +187,7 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t bg-white rounded-b-2xl">
+          <div className="p-4 border-t bg-blue-500 rounded-b-2xl">
             <div className="flex space-x-3">
               <input
                 type="text"
